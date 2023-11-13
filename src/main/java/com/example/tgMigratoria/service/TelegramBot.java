@@ -76,7 +76,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     throw new RuntimeException(e);
                 }
                 if (status != null) {
-                    sendTextMessage(chatId, "Статус вашего дела: " + status);
+                    sendTextMessage(chatId, status);
                 } else {
                     sendTextMessage(chatId, "Информация не найдена.");
                 }
@@ -91,6 +91,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void sendTextMessage(long chatId, String text) {
         SendMessage message = new SendMessage(String.valueOf(chatId), text);
+        message.enableMarkdown(true);
         try {
             execute(message);
         } catch (TelegramApiException e) {

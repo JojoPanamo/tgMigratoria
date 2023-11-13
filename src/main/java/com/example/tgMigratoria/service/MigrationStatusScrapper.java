@@ -11,15 +11,17 @@ import org.springframework.stereotype.Component;
 
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 @Component
 public class MigrationStatusScrapper {
     private static final String MIGRATION_SERVICE_URL = "https://www.migraciones.gov.ar/accesible/consultaTramitePrecaria/ConsultaUnificada.php"; // Замените на реальный URL
 
     public String getStatusForUser(String documentNumber, String birthDay, String birthMonth, String birthYear) throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "/Users/jojomac/Desktop/progProjects/tgMigratoria/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/Users/jojomac/Desktop/tgMigratoria/chromedriver");
         // Создание экземпляра веб-драйвера (Chrome)
         //WebDriverManager.chromedriver().setup();
+        System.setProperty("webdriver.chrome.logfile", "/Users/jojomac/Desktop/tgMigratoria/chromedriver.log");
         WebDriver driver = new ChromeDriver();
 
         try {
@@ -37,27 +39,27 @@ public class MigrationStatusScrapper {
             birthYearInput.sendKeys(birthYear);
 //
             Thread thread = new Thread();
-            thread.sleep(300);
+            thread.sleep(1000);
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
             WebElement clickSubmit = wait.until(ExpectedConditions.elementToBeClickable(By.id("buscar_datos")));
             clickSubmit.click();
-            // Дополнительные действия (например, клик по кнопке для отправки данных)
+
             WebDriverWait wait1 = new WebDriverWait(driver, Duration.ofSeconds(20));
             wait1.until(ExpectedConditions.visibilityOfElementLocated(By.id("datos_respuesta")));
 
-            // Ожидание загрузки страницы и получение статуса дела
-            WebElement divElement = driver.findElement(By.cssSelector("div.circle.active"));
-            Thread thread1 = new Thread();
-            thread1.sleep(3000);
-
+            WebElement divElement = driver.findElement(By.id("div_id_paso_7"));
+//            thread.sleep(3000);
             List<WebElement> spanElements = divElement.findElements(By.cssSelector("span[id^='span_txt_paso_7_aux_']"));
-            String statusText = "";
+            List<String> statusText = new ArrayList<>();
 
             for (WebElement spanElement : spanElements) {
-                statusText = spanElement.getText();
-                System.out.println(statusText);
+                String word = spanElement.getText();
+                statusText.add(word);
             }
-            return "Статус вашего дела: " + statusText;
+            for (String word : statusText) {
+                System.out.print(word + " ");
+            }
+            return String.join(" ", statusText);
         } finally {
             // Закрытие веб-драйвера после использования
            driver.quit();
