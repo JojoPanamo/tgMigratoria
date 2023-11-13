@@ -1,0 +1,7 @@
+com/example/tgMigratoria/config/BotInitializer.class
+com/example/tgMigratoria/service/MigrationStatusScrapper.class
+com/example/tgMigratoria/service/TelegramBot.class
+com/example/tgMigratoria/tgMigratoriaApplication.class
+com/example/tgMigratoria/config/BotConfig.class
+com/example/tgMigratoria/service/TelegramBot$UserState.class
+com/example/tgMigratoria/service/UserContext.class
